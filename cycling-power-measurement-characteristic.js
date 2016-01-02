@@ -45,7 +45,7 @@ CyclingPowerMeasurementCharacteristic.prototype.onUnsubscribe = function() {
 };
 
 CyclingPowerMeasurementCharacteristic.prototype.notify = function(event) {
-  if (!('watts' in event) && !('stroke_count' in event)) {
+  if (!('watts' in event) && !('rev_count' in event)) {
     // ignore events with no power and no crank data
     return;
   }
@@ -67,9 +67,9 @@ CyclingPowerMeasurementCharacteristic.prototype.notify = function(event) {
     buffer.writeInt16LE(watts, 2);
   }
 
-  if ('stroke_count' in event) {
-    debug("stroke_count: " + event.stroke_count);
-    buffer.writeUInt16LE(event.stroke_count, 4);
+  if ('rev_count' in event) {
+    debug("rev_count: " + event.rev_count);
+    buffer.writeUInt16LE(event.rev_count, 4);
 
     var now = Date.now();
     var now_1024 = Math.floor(now*1e3/1024);
