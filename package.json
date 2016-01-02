@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "bleno": "0.3.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://github.com/olympum/ble-cycling-power.git"
