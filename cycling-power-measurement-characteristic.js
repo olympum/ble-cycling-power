@@ -45,11 +45,13 @@ CyclingPowerMeasurementCharacteristic.prototype.onUnsubscribe = function() {
 };
 
 CyclingPowerMeasurementCharacteristic.prototype.notify = function(event) {
-  if (!('watts' in event) && !('rev_count' in event)) {
-    // ignore events with no power and no crank data
+  if (!('watts' in event)) {
+    // ignore events with no power data
     return;
   }
   var buffer = new Buffer(8);
+  buffer.fill(0); //initialize buffer
+  
   // flags
   // 00000001 - 1   - 0x001 - Pedal Power Balance Present
   // 00000010 - 2   - 0x002 - Pedal Power Balance Reference
@@ -59,14 +61,12 @@ CyclingPowerMeasurementCharacteristic.prototype.notify = function(event) {
   // 00100000 - 32  - 0x020 - Crank Revolution Data Present
   // 01000000 - 64  - 0x040 - Extreme Force Magnitudes Present
   // 10000000 - 128 - 0x080 - Extreme Torque Magnitudes Present
-  buffer.writeUInt16LE(0x020, 0);
+  var flags = 0;
+  var watts = event.watts;
 
-  if ('watts' in event) {
-    var watts = event.watts;
-    debug("power: " + watts);
-    buffer.writeInt16LE(watts, 2);
-  }
-
+  debug("power: " + watts);
+  buffer.writeInt16LE(watts, 2);
+  
   if ('rev_count' in event) {
     debug("rev_count: " + event.rev_count);
     buffer.writeUInt16LE(event.rev_count, 4);
@@ -76,7 +76,10 @@ CyclingPowerMeasurementCharacteristic.prototype.notify = function(event) {
     var event_time = now_1024 % 65536; // rolls over every 64 seconds
     debug("event time: " + event_time);
     buffer.writeUInt16LE(event_time, 6);
+    flags |= 0x020;
   }
+
+  buffer.writeUInt16LE(flags, 0);
 
   if (this._updateValueCallback) {
     this._updateValueCallback(buffer);
