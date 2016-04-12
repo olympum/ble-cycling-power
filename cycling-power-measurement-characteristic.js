@@ -72,7 +72,7 @@ CyclingPowerMeasurementCharacteristic.prototype.notify = function(event) {
     buffer.writeUInt16LE(event.rev_count, 4);
 
     var now = Date.now();
-    var now_1024 = Math.floor(now*1e3/1024);
+    var now_1024 = Math.floor(now*1024/1000);
     var event_time = now_1024 % 65536; // rolls over every 64 seconds
     debug("event time: " + event_time);
     buffer.writeUInt16LE(event_time, 6);
