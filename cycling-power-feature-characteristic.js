@@ -27,7 +27,7 @@ CyclingPowerFeatureCharacteristic.prototype.onReadRequest = function(offset, cal
   // 0100 - 0x04 - wheel revolutions
   // 1000 - 0x08 - crank revolutions
   var value = new Buffer(4);
-  value.writeUInt32LE(0x08);
+  value.writeUInt32LE(0x08|0x04);
   callback(this.RESULT_SUCCESS, value);
 };
 
