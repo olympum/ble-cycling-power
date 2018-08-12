@@ -1,4 +1,4 @@
-var bcp = new require('ble-cycling-power');
+var bcp = require('./');
 
 var peripheral = new bcp.BluetoothPeripheral('TestDevice');
 
